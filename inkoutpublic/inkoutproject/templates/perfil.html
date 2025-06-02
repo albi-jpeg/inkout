@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ink Out!{% endblock %}
+
+{% block content %}
+  <body class="text-white">
+    <header class="vh-100">
+      <nav class="navbar navbar-expand-lg fixed-top px-5">
+        <div class="collapse navbar-collapse">
+          <a href="{% url 'landpage' %}" class="mr-auto"><img src="../static/admin/img/logo03.png" alt="logo" /></a>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link text-white" href="{% url 'landpage' %}">INICIO</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <main class="perfilmain">
+      <section class="Contacto" style="background-image: url('../static/admin/img/tattoo_artists.jpg');">
+        <div class="container mt-3 p-4" style="background-color: rgba(0, 0, 0, 0.8);">
+          <h2 class="text-white">Perfil de usuario</h2>
+          <div class="perfil1">
+            <div class="perfil2 ml-5">
+              <img src="{{ foto_perfil }}" alt="Perfil" class="img-fluid rounded-circle" />
+              <div class="ms-4 mt-5">
+                <h6 class="text-white">{{ user.nombre }}</h6>
+                <p class="text-white">{{ email }}</p>
+                <h6 class="mt-2">Tipo de usuario: <span>{{ user_type }}</span></h6>
+              </div>
+            </div>
+          </div>
+          <div class="Artista02 bg-transparent">
+            <div class="d-flex gap-2 flex-wrap mb-3">
+                {% if user_type in 'Usuario,Artista,Administrador' %}
+                <button id="btn1" class="btn btn-dark" onclick="toggleCitas('div1', 'div2')">Citas</button>
+                {% endif %}
+                
+                {% if user_type in 'Administrador,Artista' %}
+                <button id="btn2" class="btn btn-dark" onclick="toggleMensajes('div1','div2')">Mensajes</button>
+                {% endif %}
+            </div>
+        
+            <!-- Citas -->
+            {% if user_type == 'Usuario' %}
+            <div id="div1" class="trabajodisenyo mb-3" style="display: none; min-width: auto;">
+                {% if citas %}
+                <ul class="list-group list-group-flush">
+                    {% for cita in citas %}
+                    {% if cita.estado == 'aprobada' %}
+                    <li class="list-group-item bg-transparent text-white d-flex align-items-center">
+                        {{ cita.artista }} - {{ cita.fecha|date:"d M Y" }} - {{ cita.hora }}
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">No tienes citas registradas.</p>
+                {% endif %}
+            </div>
+            {% elif user_type == 'Artista' %}
+            <div id="div1" class="trabajodisenyo mb-3" style="display: none; min-width: auto;">
+                {% if citas %}
+                <ul class="list-group list-group-flush">
+                  {% for cita in citas %}
+                  <li class="list-group-item bg-transparent text-white d-flex  align-items-center">
+                    <div class="me-2 mb-2">
+                            {{ cita.usuario }} - {{ cita.fecha|date:"d M Y" }} - {{ cita.hora }} - Estado ({{ cita.estado }})
+                        </div>
+                        <form method="post" class="form bg-transparent">
+                            {% csrf_token %}
+                            <input type="hidden" name="cita_id" value="{{ cita.id }}">
+                            <button type="submit" name="estado" value="aprobada" class="btn btn-success btn-sm ">Aprobar</button>
+                            <button type="submit" name="estado" value="rechazada" class="btn btn-danger btn-sm">Rechazar</button>
+                        </form>
+                    </li>                    
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">No tienes citas registradas.</p>
+                {% endif %}
+            </div>
+            {% elif user_type == 'Administrador' %}
+            <div id="div1" class="trabajodisenyo mb-3" style="display: none; min-width: auto;">
+                {% if citas %}
+                <ul class="list-group list-group-flush">
+                    {% for cita in citas %}
+                  <li class="list-group-item bg-transparent text-white d-flex  align-items-center">
+                      <div class="me-2 mb-2">
+                            {{ cita.usuario }} - {{ cita.fecha|date:"d M Y" }} - {{ cita.hora }} - Estado ({{ cita.estado }})
+                        </div>
+                        <form method="post" class="form bg-transparent">
+                            {% csrf_token %}
+                            <input type="hidden" name="cita_id" value="{{ cita.id }}">
+                            <button type="submit" name="estado" value="aprobada" class="btn btn-success btn-sm">Aprobar</button>
+                            <button type="submit" name="estado" value="rechazada" class="btn btn-danger btn-sm">Rechazar</button>
+                        </form>
+                    </li>                    
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">No tienes citas registradas.</p>
+                {% endif %}
+            </div>
+            {% endif %}
+        
+            <div id="div2" class="trabajodisenyo" style="display:none;">
+                {% if mensajes %}
+                <ul class="list-group list-group-flush w-100">
+                    {% for mensaje in mensajes %}
+                    <li class="list-group-item bg-dark text-white w-100">
+                        <strong>{{ mensaje.fecha|date:"d M Y H:i" }}</strong><br>
+                        <strong>Nombre:</strong> {{ mensaje.nombre }}<br>
+                        <strong>Teléfono:</strong> {{ mensaje.telefono }}<br>
+                        <strong>Asunto:</strong> {{ mensaje.asunto }}<br>
+                        <strong>Mensaje:</strong> {{ mensaje.mensaje }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">No hay mensajes.</p>
+                {% endif %}
+                
+            </div>
+            
+        </div>
+        
+        </div>
+      </section>
+      <section style="margin-bottom: -200px;"></section>
+    </main>
+
+    {% endblock %}
+

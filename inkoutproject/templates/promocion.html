@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ink Out!{% endblock %}
+
+{% block content %}
+<body class="text-white">
+    <header class="vh-100">
+        <nav class="navbar navbar-expand-lg fixed-top px-5">
+            <div class="collapse navbar-collapse">
+                <a href="{% url 'landpage' %}" class="mr-auto">
+                    <img src="{% static 'admin/img/logo03.png' %}" alt="logo">
+                </a>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link text-white" href="{% url 'landpage' %}">INICIO</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main class="promodetallemain">
+        <section class="PromoDetalle" style="background-image: url({% static 'admin/img/contact.jpg' %});">
+            <div class="dos container">
+                <h2 style="margin-bottom: -20px;">{{promocion.titulo}}</h2>
+                <p>{{promocion.descripcion}} <br><br> fin de promoción: {{promocion.fecha_fin}}<br></p>
+                <p>Usa el código QR para aplicar la promoción:</p> <br>
+                <img src="{{ promocion.codigo_qr.url }}" alt="">
+            </div>
+        </section>
+    </main>
+    {% endblock %}

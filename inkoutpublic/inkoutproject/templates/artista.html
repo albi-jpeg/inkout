@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ink Out!{% endblock %}
+
+{% block content %}
+  <body class="text-white">
+    <header class="vh-100">
+      <nav class="navbar navbar-expand-lg fixed-top px-5">
+        <div class="collapse navbar-collapse">
+          <a href="{% url 'landpage' %}" class="mr-auto"><img src="{% static 'admin/img/logo03.png' %}" alt="logo" /></a>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link text-white" href="{% url 'landpage' %}">INICIO</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <main class="artistamain">
+      <section class="Artista">
+        <div class="container text-white" style="background-color: rgba(0, 0, 0, 0.8);">
+          <div class="Artista01 row bg-transparent">
+            <div class="col-12 col-md-4">
+              <img class="perfil img-fluid" src="{{ artista.foto_perfil.url }}" alt="" />
+            </div>
+            <div class="col-12 col-md-8">
+              <h2>{{ artista.nombre_artistico }}</h2>
+              <p>{{ artista.biografia }}</p>
+              <p>
+                Síguele en Instagram: <a class="text-white" href="{{ artista.sitio_web }}" target="_blank">{{ artista.sitio_web }}</a>
+              </p>
+              <p>{{ artista.usuario }}</p>
+              <a href="../#contacto"><button id="btn3" class="btn btn-dark">Contactar</button></a>
+            </div>
+          </div>
+
+          <div class="Artista02">
+            <div class="d-flex gap-2 flex-wrap mb-3">
+              <button id="btn1" class="btn btn-dark">Trabajos</button>
+              <button id="btn2" class="btn btn-dark">Diseños disponibles</button>
+            </div>
+
+            <div id="div1" class="trabajodisenyo row d-none">
+              <div class="col-12 col-sm-6 col-lg-3 mb-3">
+                <img src="{% static 'admin/img/trabajo.png' %}" class="img-fluid" alt="" />
+              </div>
+              <div class="col-12 col-sm-6 col-lg-3 mb-3">
+                <img src="{% static 'admin/img/trabajo.png' %}" class="img-fluid" alt="" />
+              </div>
+              <div class="col-12 col-sm-6 col-lg-3 mb-3">
+                <img src="{% static 'admin/img/trabajo.png' %}" class="img-fluid" alt="" />
+              </div>
+              <div class="col-12 col-sm-6 col-lg-3 mb-3">
+                <img src="{% static 'admin/img/trabajo.png' %}" class="img-fluid" alt="" />
+              </div>
+            </div>
+
+            <div id="div2" class="trabajodisenyo row d-none">
+              {% for disenyo in disenyos %}
+                {% if disenyo.artista == artista %}
+                  <div class="col-12 col-sm-6 col-lg-3 mb-3">
+                    <a href="{% url 'disenyo' pk=disenyo.id %}"><img src="{{ disenyo.imagen.url }}" class="img-fluid" alt="" /></a>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    {% endblock %}
+

@@ -1,0 +1,436 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+{% block title %}Ink Out!{% endblock %}
+
+{% block content %}
+
+<body class="text-white">
+    <a href="#subir" class="subir"><button class="btn btn-dark">^</button></a>
+    <a id="subir"></a>
+    <header class="vh-100">
+        <nav class="navbar navbar-expand-lg fixed-top px-5">
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link text-white" href="{% url 'landpage' %}">INICIO</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main class="adminpanelmain">
+        <section class="Adminpanel">
+            <div class="content">
+                <h1>Panel de Administración</h1><br>
+                {% if messages %}
+                        <div class="alert alert-danger">
+                            {% for message in messages %}
+                                <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                <br>
+                <div id="show-content">
+                    {% if mostrar == 'artistas' %}
+                    {% if accion == 'crear' or accion == 'editar' or accion == 'borrar' %}
+                    {% else %}
+                    <h2>Lista de Artistas</h2><br>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Nombre artístico</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for artista in artistas %}
+                            <tr>
+                                <td>{{ artista.usuario }}</td>
+                                <td>{{ artista.nombre_artistico }}</td>
+                                <td>
+                                    <a href="?mostrar=artistas&accion=editar&pk={{ artista.pk }}"
+                                        class="btn btn-sm btn-dark">Editar</a>
+
+                                    <a href="?mostrar=artistas&accion=borrar&pk={{ artista.pk }}"
+                                        class="btn btn-sm btn-danger">Borrar</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3">No hay artistas registrados.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                    {% if accion == 'crear' %}
+                        <h2>Añadir Nuevo Artista</h2><br>
+                        <form class="form col-6" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form|crispy }} 
+                            <button type="submit" class="btn btn-success mt-3">Guardar</button>
+                        </form>
+                    {% elif accion == 'editar' %}
+                    <h2>Editar Artista</h2><br>
+                    <form class="form col-6" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }} 
+                        <button type="submit" class="btn btn-success mt-3">Guardar</button>
+                    </form>
+                    {% elif accion == 'borrar' %}
+                    <h2>¿Seguro que deseas borrar este artista?</h2><br>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Borrar</button>
+                        <a href="?mostrar=artistas" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                    {% endif %}
+                    {% elif mostrar == 'citas' %}
+                    {% if accion == 'crear' or accion == 'editar' or accion == 'borrar' %}
+                    {% else %}
+                    <h2>Lista de Citas</h2><br>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th>Artista</th>
+                                <th>Usuario</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cita in citas %}
+                            <tr>
+                                <td>{{ cita.artista }}</td>
+                                <td>{{ cita.usuario }}</td>
+                                <td>{{ cita.fecha }}</td>
+                                <td>{{ cita.hora }}</td>
+                                <td>{{ cita.estado }}</td>
+                                <td>
+                                    <a href="?mostrar=citas&accion=editar&pk={{ cita.pk }}"
+                                        class="btn btn-sm btn-dark">Editar</a>
+
+                                    <a href="?mostrar=citas&accion=borrar&pk={{ cita.pk }}"
+                                        class="btn btn-sm btn-danger">Borrar</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3">No hay citas registradas.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                    {% if accion == 'crear' %}
+                    <h2>Añadir Nueva Cita</h2><br>
+                    <form class="form col-6" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }} 
+                        <button type="submit" class="btn btn-success mt-3">Guardar</button>
+                    </form>
+                    {% elif accion == 'editar' %}
+                    <h2>Editar Cita</h2><br>
+                    <form class="form col-6" method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }} 
+                        <button type="submit" class="btn btn-success mt-3">Guardar</button>
+                    </form>
+                    {% elif accion == 'borrar' %}
+                    <h2>¿Seguro que deseas borrar esta cita?</h2><br>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Borrar</button>
+                        <a href="?mostrar=citas" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                    {% endif %}
+                    {% elif mostrar == 'disenyos' %}
+                    {% if accion == 'crear' or accion == 'editar' or accion == 'borrar' %}
+                    {% else %}
+                    <h2>Lista de Diseños</h2><br>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Artista</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for disenyo in disenyos %}
+                            <tr>
+                                <td>{{ disenyo.titulo }}</td>
+                                <td>{{ disenyo.artista }}</td>
+                                <td>
+                                    <a href="?mostrar=disenyos&accion=editar&pk={{ disenyo.pk }}"
+                                        class="btn btn-sm btn-dark">Editar</a>
+
+                                    <a href="?mostrar=disenyos&accion=borrar&pk={{ disenyo.pk }}"
+                                        class="btn btn-sm btn-danger">Borrar</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3">No hay diseños registrados.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                    {% if accion == 'crear' %}
+                    <h2>Añadir Nuevo Diseño</h2><br>
+                    <form class="form col-6" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }} 
+                        <button type="submit" class="btn btn-success mt-3">Guardar</button>
+                    </form>
+                    {% elif accion == 'editar' %}
+                    <h2>Editar Diseño</h2><br>
+                    <form class="form col-6" method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }} 
+                        <button type="submit" class="btn btn-success mt-3">Guardar</button>
+                    </form>
+                    {% elif accion == 'borrar' %}
+                    <h2>¿Seguro que deseas borrar este diseño?</h2><br>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Borrar</button>
+                        <a href="?mostrar=disenyos" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                    {% endif %}
+                    {% elif mostrar == 'promos' %}
+                    {% if accion == 'crear' or accion == 'editar' or accion == 'borrar' %}
+                    {% else %}
+                    <h2>Lista de Promociones</h2><br>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Descripción</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for promo in promos %}
+                            <tr>
+                                <td>{{ promo.titulo }}</td>
+                                <td>{{ promo.descripcion }}</td>
+                                <td>
+                                    <a href="?mostrar=promos&accion=editar&pk={{ promo.pk }}"
+                                        class="btn btn-sm btn-dark">Editar</a>
+
+                                    <a href="?mostrar=promos&accion=borrar&pk={{ promo.pk }}"
+                                        class="btn btn-sm btn-danger">Borrar</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3">No hay promociones registradas.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                    {% if accion == 'crear' %}
+                    <h2>Añadir Nueva Promoción</h2><br>
+                    <form class="form col-6" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }} 
+                        <button type="submit" class="btn btn-success mt-3">Guardar</button>
+                    </form>
+                    {% elif accion == 'editar' %}
+                    <h2>Editar Promoción</h2><br>
+                    <form class="form col-6" method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }} 
+                        <button type="submit" class="btn btn-success mt-3">Guardar</button>
+                    </form>
+                    {% elif accion == 'borrar' %}
+                    <h2>¿Seguro que deseas borrar esta promoción?</h2><br>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Borrar</button>
+                        <a href="?mostrar=promos" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                    {% endif %}
+
+                    {% elif mostrar == 'usuarios' %}
+                    {% if accion == 'crear' or accion == 'editar' or accion == 'borrar' %}
+                    {% else %}
+                    <h2>Lista de Usuarios</h2><br>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for usuario in usuarios %}
+                            <tr>
+                                <td>{{ usuario.nombre }}</td>
+                                <td>{{ usuario.email }}</td>
+                                <td>
+                                    <a href="?mostrar=usuarios&accion=editar&pk={{ usuario.pk }}"
+                                        class="btn btn-sm btn-dark">Editar</a>
+
+                                    <a href="?mostrar=usuarios&accion=borrar&pk={{ usuario.pk }}"
+                                        class="btn btn-sm btn-danger">Borrar</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3">No hay usuarios registrados.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                    {% if accion == 'crear' %}
+                    <h2>Añadir Nuevo Usuario</h2><br>
+                    <form class="form col-6" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }} 
+                        <button type="submit" class="btn btn-success mt-3">Guardar</button>
+                    </form>
+                    {% elif accion == 'editar' %}
+                    <h2>Editar Usuario</h2><br>
+                    <form class="form col-6" method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }} 
+                        <button type="submit" class="btn btn-success mt-3">Guardar</button>
+                    </form>
+                    {% elif accion == 'borrar' %}
+                    <h2>¿Seguro que deseas borrar este usuario?</h2><br>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Borrar</button>
+                        <a href="?mostrar=usuarios" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                    {% endif %}
+                    {% elif mostrar == 'mensajes' %}
+                    {% if  accion == 'borrar' %}
+                    {% else %}
+                    <h2>Lista de Mensajes</h2><br>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Teléfono</th>
+                                <th>Asunto</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mensaje in mensajes %}
+                            <tr>
+                                <td>{{ mensaje.nombre }}</td>
+                                <td>{{ mensaje.telefono }}</td>
+                                <td>{{ mensaje.asunto }}</td>
+                                <td>{{ mensaje.fecha }}</td>
+                                <td>
+                                    <a href="?mostrar=mensajes&accion=borrar&pk={{ mensaje.pk }}"
+                                        class="btn btn-sm btn-danger">Borrar</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3">No hay mensajes registrados.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                    {% if accion == 'borrar' %}
+                    <h2>¿Seguro que deseas borrar este mensaje?</h2><br>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Borrar</button>
+                        <a href="?mostrar=mensajes" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                    {% endif %}
+                    {% else %}
+                    <p>Bienvenido al panel de administración. Selecciona una opción en el menú para comenzar.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="sidebar">
+                <h3 class="text-center text-white mb-5">Administrador</h3>
+                <div class="dropdown">
+                    <button class="btn btn-dark dropdown-toggle" type="button" id="artistasDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Artistas
+                    </button>
+                    <ul class="dropdown-menu bg-dark" aria-labelledby="artistasDropdown">
+                        <li><a class="dropdown-item" href="{% url 'artista_mostrar' %}">Mostrar Artistas</a></li>
+                        <li><a class="dropdown-item" href="{% url 'artista_crear' %}">Añadir Artista</a></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-dark dropdown-toggle" type="button" id="disenyosDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Diseños
+                    </button>
+                    <ul class="dropdown-menu bg-dark" aria-labelledby="disenyosDropdown">
+                        <li><a class="dropdown-item" href="{% url 'disenyo_mostrar' %}">Mostrar Diseños</a></li>
+                        <li><a class="dropdown-item" href="{% url 'disenyo_crear' %}">Añadir Diseño</a></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-dark dropdown-toggle" type="button" id="citasDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Citas
+                    </button>
+                    <ul class="dropdown-menu bg-dark" aria-labelledby="citasDropdown">
+                        <li><a class="dropdown-item" href="{% url 'cita_mostrar' %}">Mostrar Citas</a></li>
+                        <li><a class="dropdown-item" href="{% url 'cita_crear' %}">Añadir Cita</a></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-dark dropdown-toggle" type="button" id="promosDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Promociones
+                    </button>
+                    <ul class="dropdown-menu bg-dark" aria-labelledby="promosDropdown">
+                        <li><a class="dropdown-item" href="{% url 'promo_mostrar' %}">Mostrar Promociones</a></li>
+                        <li><a class="dropdown-item" href="{% url 'promo_crear' %}">Añadir Promoción</a></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-dark dropdown-toggle" type="button" id="usuariosDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Usuarios
+                    </button>
+                    <ul class="dropdown-menu bg-dark" aria-labelledby="usuariosDropdown">
+                        <li><a class="dropdown-item" href="{% url 'usuario_mostrar' %}">Mostrar Usuarios</a></li>
+                        <li><a class="dropdown-item" href="{% url 'usuario_crear' %}">Añadir Usuario</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-dark dropdown-toggle" type="button" id="mensajesDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Mensajes
+                    </button>
+                    <ul class="dropdown-menu bg-dark" aria-labelledby="mensajesDropdown">
+                        <li><a class="dropdown-item" href="{% url 'mensaje_mostrar' %}">Mostrar Mensajes</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </section>
+        <section></section>
+    </main>
+    {% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ink Out!{% endblock %}
+
+{% block content %}
+<body class="text-white">
+    <header class="vh-100">
+        <nav class="navbar navbar-expand-lg fixed-top px-5">
+            <div class="collapse navbar-collapse">
+                <a href="{% url 'landpage' %}" class="mr-auto">
+                    <img src="../static/admin/img/logo03.png" alt="logo">
+                </a>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link text-white" href="{% url 'landpage' %}">INICIO</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main class="promomain">
+        <section class="PromoDetalle" style="background-image: url({% static 'admin/img/contact.jpg' %});">
+            <div class="dos container " style="background-color: rgba(0, 0, 0, 0.8);">
+                <h2 style="margin-bottom: -50px;">Promociones</h2>
+                <p style="margin-bottom: -50px;">Echa un vistazo a nuestras promociones semanales</p>
+                <div class="promocionesdiv justify-content-center">
+                    <div class="row">
+                        {% for promocion in promociones %}
+                        <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                          
+                            <a href="{% url 'promocion' pk=promocion.id %}">
+                              <img src="{% static 'admin/img/favicon.ico.png' %}" alt="" class="img-fluid mb-2 w-50">
+                            </a>
+                            <h3>{{ promocion.titulo }}</h3>
+                            <p>{{ promocion.descripcion }}</p>
+                          
+                        </div>
+                        {% endfor %}
+                      </div>
+                      
+                </div>
+                
+            </div>
+
+        </section>
+    </main>
+    {% endblock %}

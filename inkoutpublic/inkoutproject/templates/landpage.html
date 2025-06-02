@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Ink Out!{% endblock %}
+
+{% block content %}
+<body class="text-white">
+
+<a href="#subir" class="subir"><button class="btn btn-dark">^</button></a>
+<a id="subir"></a>
+
+<header class="vh-100">
+    {% if messages %}
+            {% for message in messages %}
+                <div class="container alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+    {% endif %}
+    <div class="banner-container">
+        
+        <img src="{% static 'admin/img/header02.jpg' %}" alt="fondo" class="img-fluid w-100 ft01">
+        <img src="{% static 'admin/img/banner.png' %}" alt="banner" class="banner">
+        
+    </div>
+    
+    <nav class="navbar navbar-expand-md fixed-top px-5">
+        <div class="container-fluid">
+            <a href="{% url 'landpage' %}" class="mr-auto logonav">
+                <img src="{% static 'admin/img/logo03.png' %}" alt="logo">
+            </a>
+            <button id="toggler" class="navbar-toggler text-white" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon">· · ·</span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link text-white" href="#aboutus">ABOUT US</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#artistas">ARTISTAS</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#promo">PROMOS</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#contacto">CONTACTO</a></li>
+
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'perfil' %}">PERFIL</a></li>
+                        {% if user.user_type == 'usuario' %}
+                            <li class="nav-item"><a class="nav-link text-white" href="{% url 'pedircita' %}">PEDIR CITA</a></li>
+                        {% elif user.user_type == 'admin' %}
+                            <li class="nav-item"><a class="nav-link text-white" href="{% url 'admin' %}">PANEL</a></li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <form method="POST" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button class="btn bg-transparent text-white" type="submit">LOGOUT</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'login' %}">LOGIN</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="landpagemain">
+
+    <a id="aboutus"></a>
+    <section class="AboutUs">
+        <div class="container-fluid">
+            <div class="row h-100" id="columns-section">
+                <div class="col-12 col-lg-6 left-column">
+                    <h2>¡Conócenos!</h2>
+                    <h5>Somos más que un estudio</h5>
+                    <p>
+                        En Ink Out! nos dedicamos a crear tatuajes que cuentan historias y celebran la vida.
+                        Nuestro equipo cercano y profesional, asegura que cada diseño sea fiel a lo que buscas.
+                        <br>Trabajamos con pasión y libertad, para que cada pieza sea un reflejo auténtico de ti.
+                        <br><br>Aquí la tinta es solo el comienzo.
+                    </p>
+                    <a href="#contacto"><button type="submit" class="btn btn-dark">Hazlo real</button></a>
+                </div>
+                <div class="col-12 col-lg-6 right-column">
+                    <img src="{% static 'admin/img/mockup.PNG' %}" alt="" class="w-100">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <a id="artistas"></a>
+    <section class="Artistas text-dark">
+        <h2>Artistas residentes</h2>
+        <div class="divArtistas" style="margin-top: -20px;">
+            {% for artista in artistas %}
+            <div class="art">
+                <a href="{% url 'artista' pk=artista.id %}">
+                    <img src="{{ artista.foto_perfil.url }}" alt="">
+                    <h3>{{ artista.nombre }}</h3>
+                    <h4>{{ artista.nombre_artistico }}</h4>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <a id="promo"></a>
+    <section class="Promo">
+        <div class="promowe">
+            <h2>Promociones</h2>
+            <a href="{% url 'promociones' %}">
+                <div class="promoDiv">
+                    <div class="promoText text-white">Ver más</div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <a id="contacto"></a>
+    <section class="Contacto" style="background-image: url({% static 'admin/img/aboutus.png' %});">
+        <form method="POST" action="{% url 'form_contacto' %}" class="container col-md-8 col-lg-6">
+            {% csrf_token %}
+            <h2>Contacta con nosotros</h2>
+            <div class="form-group">
+                <label for="nombre">Tu nombre</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="telefono">Tu teléfono</label>
+                <input type="text" class="form-control" id="telefono" name="telefono" required>
+            </div>
+            <div class="form-group">
+                <label for="asunto">Asunto</label>
+                <input type="text" class="form-control" id="asunto" name="asunto" required>
+            </div>
+            <div class="form-group">
+                <label for="mensaje">Déjanos tu mensaje</label>
+                <textarea class="form-control" id="mensaje" name="mensaje" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-dark">Enviar</button>
+        </form>
+    </section>
+</main>
+{% endblock %}
