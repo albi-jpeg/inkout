@@ -12,6 +12,11 @@ body{
     background-color: rgb(20, 20, 20);
 }
 
+.banner-container .container{
+    position: absolute;
+
+}
+
 @media (max-width: 992px){
 
     .banner-container{
@@ -24,6 +29,7 @@ body{
 }
 
 @media (max-width: 767px) {
+
 
     .banner{
         opacity: 0;
@@ -45,6 +51,7 @@ nav{
     background-color: transparent;
     transition: background-color 0.5s;
 }
+
   
 nav.scrolled {
     background-color: rgba(0,0,0, 0.5)
@@ -135,7 +142,8 @@ main section{
     transform: translateX(0); /* Regresar a su posición original */
 }
 
-@media (max-width: 992px){
+@media (max-width: 900px){
+
     .AboutUs{
         padding-top: 40px;
     }
@@ -160,10 +168,30 @@ main section{
     }
 }
 
-.Artistas{
+.Artistas {
     padding-top: 100px;
     padding-bottom: 150px;
     background-color: rgb(250, 247, 234);
+    min-height: auto; /* Asegura que crezca con el contenido en pantallas grandes */
+}
+
+
+@media (max-width: 700px) {
+    .Artistas {
+        min-height: 1650px; 
+    }
+}
+
+@media (min-width: 700px) and (max-width: 1200px) {
+    .Artistas {
+        min-height: 800px;
+    }
+}
+
+@media (min-width: 1201px) {
+    .Artistas {
+        min-height: auto;
+    }
 }
 
 .Artistas h2{
@@ -171,11 +199,12 @@ main section{
 }
 
 .Artistas div {
-    margin-top: 100px;
+    margin-top: 50px;
     text-align: center;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(0, 25%)); 
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); 
 }
+
 
 .Artistas a{
     color: inherit;
@@ -188,7 +217,6 @@ main section{
 }
 
 .divArtistas{
-    margin-top: 100vh;
     display: flex;
     justify-content: center;
     margin-top: 20px;
@@ -272,10 +300,13 @@ main section{
 .Contacto{
     padding-top: 100px;
     padding-bottom: 150px;
-    background-image: url('../img/contact.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    min-height: auto;
+    margin-bottom: 150px;
+
+
 }
 
 .Contacto h2{
@@ -374,10 +405,31 @@ footer img{
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    
+}
+
+@media (max-width: 580px) {
+    .Artista {
+        min-height: 2400px; 
+    }
+}
+
+@media (min-width: 580px) and (max-width: 990px) {
+    .Artista {
+        min-height: 1200px;
+    }
+}
+
+@media (min-width: 991px) {
+    .Artista {
+        min-height: 900px;
+    }
 }
 
 .Artista01{ 
     display: flex;
+    background-color: rgba(0, 0, 0, 0.8);
+
 }
 
 .Artista .uno{
@@ -388,14 +440,11 @@ footer img{
     margin-left: 20px;
 }
 
-.trabajodisenyo {
-    display: none;
-}
-
-.trabajodisenyo img{
-    padding: 20px;
-    max-width: 40%;
-    max-height: 40%;
+.trabajodisenyo img {
+    padding: 10px;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
 }
 
 .Artista02{
@@ -411,23 +460,16 @@ footer img{
 
 .Artista01, .Artista02{
     padding: 50px;
-    background-color: rgba(0, 0, 0, 0.8);
 
 }
 
-.detalledisenyo{
-    margin-top: 120px;
+.detalledisenyo img {
+    max-width: 100%;   
+    height: auto;      
+    display: block;    
+    margin: 0 auto;   
 }
 
-.detalledisenyo div{
-    margin-right: 20px;
-    margin-left: 20px;
-}
-
-.detalledisenyo img{
-    width: 500px;
-    height: 500px;
-}
 
 .fotosdisenyo{
     display: flex;
@@ -437,6 +479,24 @@ footer img{
 .promomain{
     text-align: center;
 
+}
+
+@media (max-width: 580px) {
+    .PromoDetalle {
+        min-height: 1900px; 
+    }
+}
+
+@media (min-width: 580px) and (max-width: 990px) {
+    .PromoDetalle {
+        min-height: 1000px;
+    }
+}
+
+@media (min-width: 991px) {
+    .PromoDetalle {
+        min-height: auto;
+    }
 }
 
 .Promo2{
@@ -451,22 +511,16 @@ footer img{
     display: flex;
 }
 
-.promocionesdiv div{
-    width: 25%;
-    height: 25%;
-    margin-left: 50px;
-    margin-right: 50px;
-}
 
 .promocionesdiv div img{
-    width: 100%;
-    height: 100%;
+    min-width: 30px;
+    min-height: 30px;
 }
 
 .PromoDetalle{
     display: grid;
     text-align: center;
-    background-image: url('../img/aboutus.png');
+    background-image: url('../img/contact.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -523,5 +577,44 @@ footer img{
     text-align: left;
 }
 
+.mainusuario_form form{
+    padding: 50px;
+    background-color: rgba(0, 0, 0, 0.8);
+}
 
+.mainartista_form form{
+    padding: 50px;
+    background-color: rgba(0, 0, 0, 0.8);
+}
 
+.sidebar {
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    background-color: #343a40;
+    color: white;
+    padding-top: 20px;
+}
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    display: block;
+}
+.sidebar a:hover {
+    background-color: #495057;
+}
+.content {
+    margin-left: 260px;
+    padding: 20px;
+}
+.btn-action {
+    width: 100%;
+}
+
+.Adminpanel{
+    padding-top: 100px;
+
+}

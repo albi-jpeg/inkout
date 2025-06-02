@@ -15,59 +15,83 @@ window.addEventListener('scroll', () => {
   } else {
     subir.style.display = 'none';
   }
+})
 
-  // Desplazar los artistas hacia abajo
+// Desplazar los artistas hacia abajo
+document.addEventListener("DOMContentLoaded", function () {
   let arts = document.querySelectorAll('.art');
-  let triggerPoint = window.innerHeight / 1.2; // Punto de activación
+  let triggerPoint = window.innerHeight / 1.2;
 
-  arts.forEach((art, index) => {
-    let artTop = art.getBoundingClientRect().top;
-
-    if (artTop < triggerPoint) {
-      setTimeout(() => {
-        art.style.display = 'block'; // Mostrar el div
-        art.style.transform = 'translateY(0)'; // Restablecer la posición
-        art.style.opacity = '1'; // Hacerlo visible
-      }, index * 100); // Retraso basado en el índice
-    }
+  window.addEventListener('scroll', function () {
+    arts.forEach((art, index) => {
+      let artTop = art.getBoundingClientRect().top;
+      if (artTop < triggerPoint) {
+        setTimeout(() => {
+          art.classList.add('visible');
+        }, index * 100);
+      }
+    });
   });
 });
 
-// Manejo de botones que muestran cosas dependiendo de cuál se pulse
-document.addEventListener('DOMContentLoaded', function() {
+
+document.addEventListener('DOMContentLoaded', function () {
   let btn1 = document.getElementById('btn1');
   let btn2 = document.getElementById('btn2');
   let div1 = document.getElementById('div1');
   let div2 = document.getElementById('div2');
 
-  btn1.addEventListener('click', function() {
-    div1.style.display = 'block'; // Muestra div1
-    div2.style.display = 'none'; // Oculta div2
-    // Aumenta el margen inferior del main
-    let mainElement = document.querySelector('main');
-    mainElement.style.marginBottom = '700px'; // Cambia el valor según sea necesario
-  });
+  if (btn1 && div1 && div2) {
+    btn1.addEventListener('click', function () {
+      div1.classList.remove('d-none');
+      div1.classList.add('d-flex');
+      div2.classList.add('d-none');
+      div2.classList.remove('d-flex');
+    });
+  }
 
-  btn2.addEventListener('click', function() {
-    div2.style.display = 'block'; // Muestra div2
-    div1.style.display = 'none'; // Oculta div1
-    // Aumenta el margen inferior del main
-    let mainElement = document.querySelector('main');
-    mainElement.style.marginBottom = '700px'; // Cambia el valor según sea necesario
-  });
+  if (btn2 && div2 && div1) {
+    btn2.addEventListener('click', function () {
+      div2.classList.remove('d-none');
+      div2.classList.add('d-flex');
+      div1.classList.add('d-none');
+      div1.classList.remove('d-flex');
+    });
+  }
 });
 
- // Deslizar las columnas hacia dentro
- let columnsSection = document.getElementById('columns-section');
- let leftColumn = document.querySelector('.left-column');
- let rightColumn = document.querySelector('.right-column');
 
- window.addEventListener('scroll', function() {
-   let rect = columnsSection.getBoundingClientRect();
-   
-   // Verifica si la sección está en la vista
-   if (rect.top < window.innerHeight && rect.bottom > 0) {
-     leftColumn.classList.add('visible');
-     rightColumn.classList.add('visible');
-   }
- });
+// Deslizar las columnas hacia dentro
+let columnsSection = document.getElementById('columns-section');
+let leftColumn = document.querySelector('.left-column');
+let rightColumn = document.querySelector('.right-column');
+
+window.addEventListener('scroll', function () {
+  let rect = columnsSection.getBoundingClientRect();
+
+  // Verifica si la sección está en la vista
+  if (rect.top < window.innerHeight && rect.bottom > 0) {
+    leftColumn.classList.add('visible');
+    rightColumn.classList.add('visible');
+  }
+});
+
+// Función para alternar visibilidad de las citas
+function toggleCitas(divId) {
+  var div = document.getElementById(divId);
+  if (window.getComputedStyle(div).display === "none") {
+    div.style.display = "block";
+  } else {
+    div.style.display = "none";
+  }
+}
+
+// Función para alternar visibilidad de los mensajes
+function toggleMensajes(divId) {
+  var div = document.getElementById(divId);
+  if (window.getComputedStyle(div).display === "none") {
+    div.style.display = "block";
+  } else {
+    div.style.display = "none";
+  }
+}
