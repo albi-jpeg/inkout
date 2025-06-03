@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
-from .models import Artista, Promocion, Disenyo, Cita, MensajeContacto
+from .models import *
 from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from django.contrib.messages.views import SuccessMessageMixin
@@ -19,6 +19,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse_lazy
 from django.views.generic.edit import FormView
 from django.utils.timezone import now
+from django.contrib.auth.decorators import login_required
+
 
 
 
@@ -47,6 +49,20 @@ class LoginView(FormView):
     def form_invalid(self, form):
         return super().form_invalid(form)
 
+class RegistroView(View):
+    template_name = 'registro.html'
+
+    def get(self, request):
+        form = RegistroUsuarioForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = RegistroUsuarioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Tu cuenta ha sido creada correctamente. Ahora inicia sesión.')
+            return redirect('login')
+        return render(request, self.template_name, {'form': form})
 
 #Vista de la ficha de artista    
 class ArtistaView(TemplateView):
@@ -85,14 +101,14 @@ class PerfilView(LoginRequiredMixin, TemplateView):
         user = self.request.user
         user_type = user.user_type.lower()
 
-        # Filtrar las citas según el tipo de usuario, cada tipo de usuario ve las citas de una forma distinta
+        # Filtrar las citas según el tipo de usuario
         if user_type == 'usuario':
             citas = Cita.objects.filter(usuario=user).order_by('fecha')
         elif user_type == 'artista':
             try:
                 artista = user.artista
                 citas = Cita.objects.filter(artista=artista).order_by('fecha')
-            except Artista.DoesNotExist:
+            except Exception:
                 citas = []
         elif user_type == 'admin':
             citas = Cita.objects.all().order_by('fecha')
@@ -105,38 +121,32 @@ class PerfilView(LoginRequiredMixin, TemplateView):
             'user_type': user.get_user_type_display(),
             'foto_perfil': user.foto_perfil.url if user.foto_perfil else '',
         })
-        #Solo quien trabaja en el estudio y el admin pueden ver los mensajes de los usuarios/clientes
         if user.user_type != 'usuario':
             context['mensajes'] = MensajeContacto.objects.all().order_by('-fecha')
+
+        # Mostrar formulario para editar si llega ?editar=1
+        mostrar_formulario = self.request.GET.get('editar') == '1'
+        context['mostrar_formulario'] = mostrar_formulario
+
+        # Formulario solo si está editando
+        if mostrar_formulario:
+            context['form'] = PerfilForm(instance=user)
+
         return context
-    
+
     def post(self, request, *args, **kwargs):
-        #Solo artistas y administradores pueden cambiar el estado de una cita
-        if request.user.user_type not in ['artista', 'admin']:
-            return HttpResponseForbidden("No tienes permiso para realizar esta acción.")
+        user = request.user
 
-        cita_id = request.POST.get('cita_id')
-        estado = request.POST.get('estado')
-
-        if not cita_id or not estado:
-            return HttpResponseForbidden("Faltan datos para procesar la solicitud.")
-
-        cita = get_object_or_404(Cita, id=cita_id)
-
-        #El artista solo puede aprobar/rechazar sus propias citas
-        if request.user.user_type == 'artista' and cita.artista.usuario != request.user:
-            return HttpResponseForbidden("No puedes modificar esta cita.")
-        
-        Cita.objects.filter(fecha__lt=date.today(), estado__in=['pendiente', 'aprobada']).update(estado='vencida')
-
-        if estado in ['aprobada']:
-            cita.estado = estado
-            cita.save()
-        elif estado in ['rechazada']:
-            cita.delete()    
-
-        return redirect('perfil')
-    
+        form = PerfilForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('perfil')
+        else:
+            # En caso de error en el form, mostrarlo de nuevo
+            context = self.get_context_data()
+            context['form'] = form
+            context['mostrar_formulario'] = True
+            return self.render_to_response(context)    
 
 #Vista de la ficha de promocion    
 class PromoView(LoginRequiredMixin, TemplateView):
@@ -489,4 +499,70 @@ def mensaje_mostrar(request):
     return render(request, 'admin.html', {
         'mensajes': mensajes,
         'mostrar': 'mensajes'
+    })
+
+
+@login_required
+def mis_disenyos(request):
+    if request.user.user_type != 'artista':
+        return HttpResponseForbidden("No tienes permiso para acceder aquí.")
+
+    disenyos = Disenyo.objects.filter(artista__usuario=request.user)
+    return render(request, 'artista_disenyos.html', {
+        'disenyos': disenyos,
+        'accion': None,
+    })
+
+
+@login_required
+def mis_disenyos_crear(request):
+    if request.user.user_type != 'artista':
+        return HttpResponseForbidden("No tienes permiso para acceder aquí.")
+    
+    artista = request.user.artista
+    if request.method == 'POST':
+        form = DisenyoForm(request.POST, request.FILES)
+        if form.is_valid():
+            disenyo = form.save(commit=False)
+            disenyo.artista = artista
+            disenyo.save()
+            return redirect('mis_disenyos')
+    else:
+        form = DisenyoForm()
+
+    return render(request, 'artista_disenyos.html', {
+        'form': form,
+        'accion': 'crear',
+    })
+
+
+@login_required
+def mis_disenyos_editar(request, pk):
+    disenyo = get_object_or_404(Disenyo, pk=pk, artista__usuario=request.user)
+
+    if request.method == 'POST':
+        form = DisenyoForm(request.POST, request.FILES, instance=disenyo)
+        if form.is_valid():
+            form.save()
+            return redirect('mis_disenyos')
+    else:
+        form = DisenyoForm(instance=disenyo)
+
+    return render(request, 'artista_disenyos.html', {
+        'form': form,
+        'accion': 'editar',
+    })
+
+
+@login_required
+def mis_disenyos_borrar(request, pk):
+    disenyo = get_object_or_404(Disenyo, pk=pk, artista__usuario=request.user)
+
+    if request.method == 'POST':
+        disenyo.delete()
+        return redirect('mis_disenyos')
+
+    return render(request, 'artista_disenyos.html', {
+        'objeto': disenyo,
+        'accion': 'borrar',
     })

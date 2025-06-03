@@ -26,14 +26,17 @@ def usuario_mostrar(request):
         if request.method == 'POST':
             form = UsuarioForm(request.POST, request.FILES, instance=usuario)
             if form.is_valid():
-                usuario = form.save(commit=False)
-                password = form.cleaned_data.get('password')
-                if password:
-                    usuario.set_password(password)
-                usuario.save()
+                form.save()
                 return redirect('usuario_mostrar')
         else:
             form = UsuarioForm(instance=usuario)
+
+        return render(request, 'admin.html', {
+            'form': form,
+            'accion': 'editar',
+            'mostrar': 'usuarios',
+            'usuario': usuario,
+        })
 
 
     # BORRAR USUARIO

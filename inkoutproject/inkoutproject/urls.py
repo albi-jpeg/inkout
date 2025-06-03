@@ -31,7 +31,8 @@ urlpatterns = [
     path('admin', AdminPanelView.as_view(), name='admin'),
     path('', LandpageView.as_view(), name='landpage'),
     path('login', LoginFormView.as_view(), name='login'),
-    path('logout', LogoutView.as_view(next_page='landpage'), name='logout'),
+    path('logout', LogoutView.as_view(next_page='landpage'), name='logout'), 
+    path('registro/', RegistroView.as_view(), name='registro'),
     path('artista/<int:pk>', ArtistaView.as_view(), name='artista'),
     path('disenyo/<int:pk>', DisenyoView.as_view(), name='disenyo'),
     path('error', ErrorView.as_view(), name='error'),
@@ -59,6 +60,11 @@ urlpatterns = [
     path('admin/usuarios/crear', usuario_crear, name='usuario_crear'),
     
     path('admin/mensajes', mensaje_mostrar, name='mensaje_mostrar'),
+    
+    path('mis-disenyos/', mis_disenyos, name='mis_disenyos'),
+    path('mis-disenyos/crear/', mis_disenyos_crear, name='mis_disenyos_crear'),
+    path('mis-disenyos/editar/<int:pk>/', mis_disenyos_editar, name='mis_disenyos_editar'),
+    path('mis-disenyos/borrar/<int:pk>/', mis_disenyos_borrar, name='mis_disenyos_borrar'),
 
 ]
 

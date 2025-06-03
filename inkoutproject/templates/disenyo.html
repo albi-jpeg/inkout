@@ -6,34 +6,34 @@
 {% block content %}
 <body class="text-white">
     <header class="vh-100">
-        <nav class="navbar navbar-expand-lg fixed-top px-5">
-            <div class="collapse navbar-collapse">
-                <a href="{% url 'landpage' %}" class="mr-auto">
-                    <img src="{% static 'admin/img/logo03.png' %}" alt="logo">
-                </a>
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link text-white" href="{% url 'landpage' %}">INICIO</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+      <nav class="navbar navbar-expand-lg fixed-top px-5">
+        <div class="collapse navbar-collapse">
+          <a href="{% url 'landpage' %}" class="mr-auto"><img src="../static/admin/img/logo03.png" alt="logo" /></a>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link text-white" href="{% url 'landpage' %}">INICIO</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
     </header>
+
     <main class="disenyomain">
         <div class="Artista">
-            <section class="container detalledisenyo" style="background-color: rgba(0, 0, 0, 0.8) !important; padding-top: 50px; margin-top: 0px; padding-bottom: 50px;">
-                <h2 class="mb-5 ">{{ disenyo.titulo }}</h2>
-                <div class="row fotosdisenyo">
+            <section class="container detalledisenyo p-5" style="background-color: rgba(0, 0, 0, 0.85); margin-top: 30px;">
+                <h2 class="mb-4 text-center display-5  pb-3">{{ disenyo.titulo }}</h2>
+                <div class="row align-items-center">
                     <div class="col-12 col-md-6 text-center mb-4">
-                        <img class="perfil img-fluid" src="{{ disenyo.imagen.url }}" alt="">
+                        <img class="perfil img-fluid " src="{{ disenyo.imagen.url }}" alt="">
                     </div>
-                    <div class="tres  ml-3">
-                        <p>{{ disenyo.descripcion }}</p>
-                        <a href="{% url 'pedircita' %}"><button id="btn3" class="btn btn-dark">Pedir cita</button></a>
+                    <div class="col-12 col-md-6">
+                        <p class="mb-4">{{ disenyo.descripcion }}</p>
+                        <a href="{% url 'pedircita' %}">
+                            <button id="btn3" class="btn btn-dark">Pedir cita</button>
+                        </a>
                     </div>
                 </div>
             </section>
-
         </div>
     </main>
-    {% endblock %}
+{% endblock %}

@@ -168,11 +168,10 @@
                                 <td>{{ disenyo.titulo }}</td>
                                 <td>{{ disenyo.artista }}</td>
                                 <td>
-                                    <a href="?mostrar=disenyos&accion=editar&pk={{ disenyo.pk }}"
-                                        class="btn btn-sm btn-dark">Editar</a>
-
-                                    <a href="?mostrar=disenyos&accion=borrar&pk={{ disenyo.pk }}"
-                                        class="btn btn-sm btn-danger">Borrar</a>
+                                    <a href="?mostrar=disenyos&accion=editar&pk={{ disenyo.pk }}
+                                    {% if solo_mios %}&solo_mios=1{% endif %}" class="btn btn-sm btn-dark">Editar</a>
+                                    <a href="?mostrar=disenyos&accion=borrar&pk={{ disenyo.pk }}
+                                    {% if solo_mios %}&solo_mios=1{% endif %}" class="btn btn-sm btn-danger">Borrar</a>
                                 </td>
                             </tr>
                             {% empty %}
@@ -202,7 +201,9 @@
                     <form method="post">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger">Borrar</button>
-                        <a href="?mostrar=disenyos" class="btn btn-secondary">Cancelar</a>
+                        <a href="{% if request.GET.solo_mios %}?mostrar=disenyos&solo_mios=1{% else %}?mostrar=disenyos{% endif %}" class="btn btn-secondary">
+                            Cancelar
+                        </a>                    
                     </form>
                     {% endif %}
                     {% elif mostrar == 'promos' %}
@@ -429,7 +430,6 @@
                     </ul>
                 </div>
             </div>
-
         </section>
         <section></section>
     </main>

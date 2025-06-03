@@ -95,3 +95,4 @@ function toggleMensajes(divId) {
     div.style.display = "none";
   }
 }
+
