@@ -1,0 +1,72 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ink Out!{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.png' %}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'admin/css/styles.css' %}?v=2">
+</head>
+<body class="text-white">
+    <header class="vh-100">
+      <nav class="navbar navbar-expand fixed-top px-5">
+        <div class="collapse navbar-collapse">
+          <a href="{% url 'landpage' %}" class="mr-auto"><img src="../static/admin/img/logo03.png" alt="logo" /></a>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active bg-transparent">
+              <a class="nav-link text-white" href="{% url 'landpage' %}">INICIO</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+<div class="container py-5 mt-5">
+    <h1 class="mb-4">Política de Cookies – Ink Out!</h1>
+    <p class="text-muted"><strong>Última actualización:</strong> 4 de junio de 2025</p>
+
+    <h2 class="mt-4">1. ¿Qué son las cookies?</h2>
+    <p>
+        Las cookies son pequeños archivos de texto que se almacenan en tu dispositivo (ordenador, smartphone, tablet) cuando visitas un sitio web.
+        Su función principal es recordar tus preferencias y mejorar tu experiencia de navegación.
+    </p>
+
+    <h2 class="mt-4">2. ¿Qué tipos de cookies utilizamos?</h2>
+    <ul>
+        <li><strong>Cookies técnicas o necesarias:</strong> Permiten la navegación y el uso de las funciones básicas del sitio. No requieren tu consentimiento.</li>
+        <li><strong>Cookies de preferencia:</strong> Guardan tus elecciones (como idioma o región) para personalizar tu experiencia.</li>
+        <li><strong>Cookies analíticas:</strong> Nos permiten entender cómo interactúan los usuarios con la web para mejorar su funcionamiento. Estas cookies pueden ser propias o de terceros (como Google Analytics).</li>
+    </ul>
+    <p>Actualmente, <em>Ink Out!</em> no utiliza cookies publicitarias ni de perfilado.</p>
+
+    <h2 class="mt-4">3. ¿Cómo puedes gestionar las cookies?</h2>
+    <p>
+        Puedes configurar o desactivar las cookies desde las opciones de tu navegador. Ten en cuenta que, si desactivas las cookies necesarias,
+        algunas funciones del sitio podrían no funcionar correctamente.
+    </p>
+    <p>A continuación, enlaces de ayuda para los principales navegadores:</p>
+    <ul>
+        <li><a href="https://support.google.com/chrome/answer/95647" target="_blank">Google Chrome</a></li>
+        <li><a href="https://support.mozilla.org/es/kb/proteccion-mejorada-contra-rastreo" target="_blank">Mozilla Firefox</a></li>
+        <li><a href="https://support.microsoft.com/es-es/microsoft-edge" target="_blank">Microsoft Edge</a></li>
+        <li><a href="https://support.apple.com/es-es/HT201265" target="_blank">Safari</a></li>
+    </ul>
+
+    <h2 class="mt-4">4. Cambios en la política de cookies</h2>
+    <p>
+        Nos reservamos el derecho de modificar esta política de cookies en cualquier momento. Te recomendamos revisarla periódicamente
+        para estar informado sobre cómo utilizamos las cookies.
+    </p>
+    <p>
+        Para cualquier consulta relacionada con este sitio, puedes contactar a:<br>
+        Correo de contacto: <a href="mailto:albimelgarlopez@gmail.com">Aquí</a>
+    </p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

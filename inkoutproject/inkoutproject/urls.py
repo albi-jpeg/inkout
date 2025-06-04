@@ -41,6 +41,10 @@ urlpatterns = [
     path('promociones', PromocionesView.as_view(), name='promociones'),
     path('pedircita', PedirCitaView.as_view(), name='pedircita'),
     path('contacto', ContactoView.as_view(), name='form_contacto'),
+    path('cookies', CookiesView.as_view(), name='cookies'),
+    path('privacidad', PrivView.as_view(), name='privacidad'),
+    path('terminos_y_condiciones', TeryconView.as_view(), name='terminos_y_condiciones'),
+
     
     #URL's del administrador
     path('admin/artistas', artista_mostrar, name='artista_mostrar'),

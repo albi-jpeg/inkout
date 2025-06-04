@@ -91,6 +91,30 @@ class ErrorView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ErrorView, self).get_context_data(**kwargs)
         return context
+ 
+#Vista de cookies
+class CookiesView(TemplateView):
+    template_name= '../templates/cookies.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(CookiesView, self).get_context_data(**kwargs)   
+        return context
+    
+#Vista de privacidad
+class PrivView(TemplateView):
+    template_name= '../templates/privacidad.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(PrivView, self).get_context_data(**kwargs)   
+        return context
+    
+#Vista de terminos y condiciones
+class TeryconView(TemplateView):
+    template_name= '../templates/terycon.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(TeryconView, self).get_context_data(**kwargs)   
+        return context
     
 #Vista del perfil de usuario
 class PerfilView(LoginRequiredMixin, TemplateView):

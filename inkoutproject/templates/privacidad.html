@@ -1,0 +1,73 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ink Out!{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.png' %}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'admin/css/styles.css' %}?v=2">
+</head>
+<body class="text-white">
+    <header class="vh-100">
+      <nav class="navbar navbar-expand fixed-top px-5">
+        <div class="collapse navbar-collapse">
+          <a href="{% url 'landpage' %}" class="mr-auto"><img src="../static/admin/img/logo03.png" alt="logo" /></a>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active bg-transparent">
+              <a class="nav-link text-white" href="{% url 'landpage' %}">INICIO</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+<div class="container py-5 mt-5">
+    <h1 class="mb-4">Política de Privacidad – Ink Out!</h1>
+    <p class="text-muted"><strong>Última actualización:</strong> 4 de junio de 2025</p>
+
+    <h2 class="mt-4">1. Finalidad del sitio</h2>
+    <p>
+        Este sitio web forma parte de un proyecto académico y no tiene fines comerciales. Su objetivo es mostrar el desarrollo de una aplicación web en el contexto de un trabajo educativo.
+    </p>
+
+    <h2 class="mt-4">2. Datos personales</h2>
+    <p>
+        No se recopilan datos personales sensibles de los usuarios. Si se ofrece un formulario de contacto o registro, los datos enviados (como nombre o correo electrónico) se usarán únicamente con fines de prueba o demostración dentro del marco académico.
+    </p>
+
+    <h2 class="mt-4">3. Uso de imágenes, contenidos y archivos</h2>
+    <p>
+        Algunas imágenes, diseños u otros recursos mostrados en este sitio pueden haber sido obtenidos de fuentes públicas de internet. 
+        No se utilizan con fines lucrativos ni de explotación comercial.
+        Si algún propietario desea solicitar la eliminación de contenidos, puede escribir:
+        <a href="mailto:albimelgarlopez@gmail.com">Aquí</a>
+    </p>
+
+    <h2 class="mt-4">4. Cookies</h2>
+    <p>
+        Este sitio puede utilizar cookies técnicas o de análisis. Consulta la <a href="{% url "cookies" %}">Política de Cookies</a> para más información.
+    </p>
+
+    <h2 class="mt-4">5. Derechos de los usuarios</h2>
+    <p>
+        Aunque este sitio es académico, se respetan los derechos básicos de privacidad. Si en algún momento se almacenan datos personales, cualquier persona puede solicitar su modificación o eliminación enviando un correo electrónico.
+    </p>
+
+    <h2 class="mt-4">6. Responsable del sitio</h2>
+    <p>
+        Responsable del proyecto: AML<br>
+        Correo de contacto: <a href="mailto:albimelgarlopez@gmail.com">Aquí</a>
+    </p>
+
+    <p class="mt-4 text-muted">
+        <em>Este sitio no tiene ánimo de lucro ni intención de suplantar marcas o violar derechos de autor. Está creado con fines exclusivamente educativos.</em>
+    </p>
+</div>
+
+<!-- Bootstrap JS opcional -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
