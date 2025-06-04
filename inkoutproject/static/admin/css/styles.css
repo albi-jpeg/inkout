@@ -31,11 +31,6 @@ body{
 
 @media (max-width: 767px) {
 
-
-    .banner{
-        opacity: 0;
-    }
-
     .navbar-nav {
         flex-direction: column;
         text-align: center;
