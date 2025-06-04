@@ -24,21 +24,24 @@
         <div class="container mt-3 p-4" style="background-color: rgba(0, 0, 0, 0.8);">
           <h2 class="text-white">Perfil de usuario</h2>
           <div class="perfil1">
-            <div class="perfil2">
-              <img src="{{ foto_perfil }}" alt="Perfil" class="img rounded-circle" />
-              <div class="ms-4 mt-5">
+            <div class="perfil2 d-flex flex-column flex-md-row align-items-center text-center text-md-start">
+              <img src="{{ foto_perfil }}" alt="Perfil" class="img rounded-circle mb-3 mb-md-0">
+              
+              <div class="ms-md-4">
                 <h6 class="text-white">{{ user.nombre }}</h6>
                 <p class="text-white">{{ email }}</p>
                 <h6 class="mt-2">Tipo de usuario: <span>{{ user_type }}</span></h6>
+
                 {% if user.user_type == 'artista' %}
                   <a href="{% url 'mis_disenyos' %}" class="btn btn-dark my-3">Editar Diseños</a>
                 {% endif %}
+                
                 {% if not mostrar_formulario %}
                   <a href="?editar=1" class="btn btn-dark">Editar perfil</a> 
-                {% endif %}           
+                {% endif %}
               </div>
-              
             </div>
+
             {% if mostrar_formulario %}
                   <form method="POST" action="{% url 'perfil' %}" enctype="multipart/form-data" style="padding-top: 35px;">
                     {% csrf_token %}
