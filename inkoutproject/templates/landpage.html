@@ -18,11 +18,9 @@
                 </div>
             {% endfor %}
     {% endif %}
-    <div class="banner-container">
-        
-        <img src="{% static 'admin/img/header02.jpg' %}" alt="fondo" class="img-fluid w-100 ft01">
-        <img src="{% static 'admin/img/banner.png' %}" alt="banner" class="banner">
-        
+    <div class="d-flex justify-content-center align-items-center" style="height: 100vh;  position: relative; overflow: hidden;">
+        <img src="{% static 'admin/img/header02.jpg' %}" alt="Fondo" class="bg-img" style="opacity: 0.5; transform: scale(1.3); ">
+        <img src="{% static 'admin/img/banner.png' %}" alt="Banner" class="banner">
     </div>
     
     <nav class="navbar navbar-expand-md fixed-top px-5">
