@@ -46,9 +46,18 @@ class Cita(models.Model):
     artista = models.ForeignKey(Artista, on_delete=models.CASCADE, related_name='citas')
     usuario = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='usuario')
     mensaje = models.TextField(null=True)
-    fecha = models.DateField(unique=True)
+    fecha = models.DateField()
     hora = models.TimeField()
     estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default='pendiente')
+    
+    class Meta:
+        constraints = [
+            # Un usuario no puede tener dos citas el mismo día
+            models.UniqueConstraint(fields=['usuario', 'fecha'], name='unique_usuario_fecha'),
+
+            # Un artista no puede tener dos citas a la misma fecha y hora
+            models.UniqueConstraint(fields=['artista', 'fecha', 'hora'], name='unique_artista_fecha_hora'),
+        ]
 
     def __str__(self):
         return self.fecha.strftime('%d/%m/%Y')

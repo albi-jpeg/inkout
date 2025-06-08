@@ -8,6 +8,11 @@
     <a href="#subir" class="subir"><button class="btn btn-dark">^</button></a>
     <a id="subir"></a>
     <header class="vh-100">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
       <nav class="navbar navbar-expand fixed-top px-5">
         <div class="collapse navbar-collapse">
           <a href="{% url 'landpage' %}" class="mr-auto"><img src="{% static 'admin/img/logo03.png' %}" alt="logo" /></a>

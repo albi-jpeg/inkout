@@ -24,11 +24,19 @@
     <main class="perfilmain">
       <section class="Contacto" style="background-image: url('../static/admin/img/tattoo_artists.jpg');">
         <div class="container mt-3 p-4" style="background-color: rgba(0, 0, 0, 0.8);">
+          {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
           <h2 class="text-white">Perfil de usuario</h2>
           <div class="perfil1">
             <div class="perfil2 d-flex flex-column flex-md-row align-items-center text-center text-md-start">
+              {% if user.foto_perfil %}
               <img src="{{ foto_perfil }}" alt="Perfil" class="img rounded-circle mb-3 mb-md-0">
-              
+              {% else %}
+              <img src="{% static 'admin/img/favicon.ico.png' %}" alt="Perfil" class="img rounded-circle mb-3 mb-md-0">
+              {% endif %}
               <div class="ms-md-4">
                 <h6 class="text-white">{{ user.nombre }}</h6>
                 <p class="text-white">{{ email }}</p>
@@ -90,7 +98,7 @@
                     <div class="me-2 mb-2">
                             {{ cita.usuario }} - {{ cita.fecha|date:"d M Y" }} - {{ cita.hora }} - Estado ({{ cita.estado }})
                         </div>
-                        <form method="post" class="form bg-transparent">
+                        <form method="post" action="" class="form bg-transparent">
                             {% csrf_token %}
                             <input type="hidden" name="cita_id" value="{{ cita.id }}">
                             <button type="submit" name="estado" value="aprobada" class="btn btn-success btn-sm ">Aprobar</button>

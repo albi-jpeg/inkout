@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 from inkoutapp.models import *
 from login import *
 from usuarios.models import *
-from inkoutapp.mixins import UserTypeRequiredMixin
+from inkoutapp.mixins import *
 from inkoutapp.forms import ArtistaForm, CitaForm, DisenyoForm, PromocionForm
 
 class AdminPanelView(UserTypeRequiredMixin, TemplateView):

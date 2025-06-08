@@ -10,7 +10,7 @@ from .forms import *
 from django.conf import settings
 from django.http import HttpResponse
 from django.http import HttpResponseForbidden
-from .mixins import UserTypeRequiredMixin
+from .mixins import *
 from django.db import IntegrityError
 from django.contrib import messages
 from datetime import date
@@ -20,7 +20,11 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import FormView
 from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
-
+import datetime
+from django.utils import timezone
+from django.views.generic import TemplateView
+from django.shortcuts import redirect
+from django.contrib import messages
 
 
 
@@ -58,11 +62,15 @@ class RegistroView(View):
 
     def post(self, request):
         form = RegistroUsuarioForm(request.POST)
+        if 'user_type' in request.POST:
+            return HttpResponseForbidden("No tienes permiso para establecer el tipo de usuario.")
+
         if form.is_valid():
             form.save()
             messages.success(request, 'Tu cuenta ha sido creada correctamente. Ahora inicia sesión.')
             return redirect('login')
         return render(request, self.template_name, {'form': form})
+
 
 #Vista de la ficha de artista    
 class ArtistaView(TemplateView):
@@ -118,26 +126,36 @@ class TeryconView(TemplateView):
     
 #Vista del perfil de usuario
 class PerfilView(LoginRequiredMixin, TemplateView):
-    template_name = '../templates/perfil.html' 
+    template_name = '../templates/perfil.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         user_type = user.user_type.lower()
 
-        # Filtrar las citas según el tipo de usuario
+        # Obtener citas según tipo de usuario
         if user_type == 'usuario':
-            citas = Cita.objects.filter(usuario=user).order_by('fecha')
+            citas = Cita.objects.filter(usuario=user).order_by('fecha', 'hora')
         elif user_type == 'artista':
             try:
                 artista = user.artista
-                citas = Cita.objects.filter(artista=artista).order_by('fecha')
-            except Exception:
+                citas = Cita.objects.filter(artista=artista).order_by('fecha', 'hora')
+            except:
                 citas = []
         elif user_type == 'admin':
-            citas = Cita.objects.all().order_by('fecha')
+            citas = Cita.objects.all().order_by('fecha', 'hora')
         else:
             citas = []
+
+        # Marcar como vencidas si la fecha y hora ya pasaron
+        ahora = timezone.now()
+        for cita in citas:
+            fecha_hora = datetime.datetime.combine(cita.fecha, cita.hora)
+            if timezone.is_naive(fecha_hora):
+                fecha_hora = timezone.make_aware(fecha_hora)
+            if cita.estado in ['pendiente', 'aprobada'] and fecha_hora < ahora:
+                cita.estado = 'vencida'
+                cita.save()
 
         context.update({
             'citas': citas,
@@ -145,14 +163,14 @@ class PerfilView(LoginRequiredMixin, TemplateView):
             'user_type': user.get_user_type_display(),
             'foto_perfil': user.foto_perfil.url if user.foto_perfil else '',
         })
-        if user.user_type != 'usuario':
+
+        if user_type != 'usuario':
             context['mensajes'] = MensajeContacto.objects.all().order_by('-fecha')
 
-        # Mostrar formulario para editar si llega ?editar=1
+        # Mostrar formulario si llega ?editar=1
         mostrar_formulario = self.request.GET.get('editar') == '1'
         context['mostrar_formulario'] = mostrar_formulario
 
-        # Formulario solo si está editando
         if mostrar_formulario:
             context['form'] = PerfilForm(instance=user)
 
@@ -161,18 +179,39 @@ class PerfilView(LoginRequiredMixin, TemplateView):
     def post(self, request, *args, **kwargs):
         user = request.user
 
-        form = PerfilForm(request.POST, request.FILES, instance=user)
-        if form.is_valid():
-            form.save()
-            return redirect('perfil')
-        else:
-            # En caso de error en el form, mostrarlo de nuevo
-            context = self.get_context_data()
-            context['form'] = form
-            context['mostrar_formulario'] = True
-            return self.render_to_response(context)    
+        # Edición de perfil
+        if 'nombre' in request.POST or 'foto_perfil' in request.FILES:
+            form = PerfilForm(request.POST, request.FILES, instance=user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Perfil actualizado con éxito.")
+                return redirect('perfil')
+            else:
+                context = self.get_context_data()
+                context['form'] = form
+                context['mostrar_formulario'] = True
+                return self.render_to_response(context)
 
-#Vista de la ficha de promocion    
+        # Aprobación o rechazo de citas
+        elif 'cita_id' in request.POST and 'estado' in request.POST:
+            cita_id = request.POST.get('cita_id')
+            nuevo_estado = request.POST.get('estado')
+            try:
+                cita = Cita.objects.get(id=cita_id)
+
+                if nuevo_estado == 'rechazada':
+                    cita.delete()
+                    messages.info(request, "Cita rechazada y eliminada.")
+                else:
+                    cita.estado = nuevo_estado
+                    cita.save()
+                    messages.success(request, f"Cita marcada como {nuevo_estado}.")
+            except Cita.DoesNotExist:
+                messages.error(request, "La cita no existe.")
+            return redirect('perfil')
+
+        return redirect('perfil')#Vista de la ficha de promocion    
+    
 class PromoView(LoginRequiredMixin, TemplateView):
     template_name = '../templates/promocion.html'
 
@@ -192,7 +231,7 @@ class PromocionesView(TemplateView):
         return context
     
 #Vista del formulario para pedir una cita
-class PedirCitaView(LoginRequiredMixin, TemplateView):
+class PedirCitaView(UsuarioOnlyMixin, TemplateView):
     template_name = '../templates/cita.html'
 
     def get_context_data(self, **kwargs):
@@ -527,22 +566,17 @@ def mensaje_mostrar(request):
 
 
 @login_required
+@artista_required
 def mis_disenyos(request):
-    if request.user.user_type != 'artista':
-        return HttpResponseForbidden("No tienes permiso para acceder aquí.")
-
     disenyos = Disenyo.objects.filter(artista__usuario=request.user)
     return render(request, 'artista_disenyos.html', {
         'disenyos': disenyos,
         'accion': None,
     })
 
-
 @login_required
+@artista_required
 def mis_disenyos_crear(request):
-    if request.user.user_type != 'artista':
-        return HttpResponseForbidden("No tienes permiso para acceder aquí.")
-    
     artista = request.user.artista
     if request.method == 'POST':
         form = DisenyoForm(request.POST, request.FILES)
@@ -559,8 +593,8 @@ def mis_disenyos_crear(request):
         'accion': 'crear',
     })
 
-
 @login_required
+@artista_required
 def mis_disenyos_editar(request, pk):
     disenyo = get_object_or_404(Disenyo, pk=pk, artista__usuario=request.user)
 
@@ -577,8 +611,8 @@ def mis_disenyos_editar(request, pk):
         'accion': 'editar',
     })
 
-
 @login_required
+@artista_required
 def mis_disenyos_borrar(request, pk):
     disenyo = get_object_or_404(Disenyo, pk=pk, artista__usuario=request.user)
 
