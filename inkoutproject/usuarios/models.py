@@ -6,6 +6,7 @@ from django.utils.timezone import now
 # Create your models here.
 
 
+#Modelo usuario y gestion de superuser
 
 class MyUserManager(BaseUserManager):
     def create_user(self, email, password=None, user_type='usuario', **extra_fields):
@@ -30,7 +31,7 @@ class MyUserManager(BaseUserManager):
         return self.create_user(email, password, user_type='admin', **extra_fields)
 
 class MyUser(AbstractBaseUser, PermissionsMixin):
-
+    #IMPORTANTE tipos de usuario, esto va a ser la lógica de toda la aplicación
     USER_TYPE_CHOICES = (
         ('usuario', 'Usuario'),
         ('artista', 'Artista'),

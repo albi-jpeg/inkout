@@ -18,6 +18,7 @@ class UserTypeRequiredMixin(LoginRequiredMixin):
 
         return super().dispatch(request, *args, **kwargs)
 
+#Mixin para proteger las vistas del usuario raso
 class UsuarioOnlyMixin(UserTypeRequiredMixin):
     required_user_type = 'usuario'
 
@@ -32,6 +33,7 @@ class UsuarioOnlyMixin(UserTypeRequiredMixin):
         return super().dispatch(request, *args, **kwargs)
     
 
+#Método para proteger las funciones del artista 
 def artista_required(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):

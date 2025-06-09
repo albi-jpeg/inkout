@@ -392,7 +392,7 @@ def cita_mostrar(request):
             'accion': 'borrar',
             'mostrar': 'citas',
         })
-    
+    #las citas caducadas cambian de estado
     Cita.objects.filter(fecha__lt=date.today(), estado__in=['pendiente', 'aprobada']).update(estado='vencida')
     # MOSTRAR LISTADO
     citas = Cita.objects.all()
