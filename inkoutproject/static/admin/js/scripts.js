@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-
+//Variar la visibilidad entre los contenedores de trabajos y diseños, en la ficha artista
 document.addEventListener('DOMContentLoaded', function () {
   let btn1 = document.getElementById('btn1');
   let btn2 = document.getElementById('btn2');
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-// Deslizar las columnas hacia dentro
+// Deslizar las columnas del about us hacia dentro
 let columnsSection = document.getElementById('columns-section');
 let leftColumn = document.querySelector('.left-column');
 let rightColumn = document.querySelector('.right-column');
