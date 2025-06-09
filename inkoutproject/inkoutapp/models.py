@@ -5,9 +5,9 @@ from usuarios.models import MyUser
 #Modelo artistas
 class Artista(models.Model):
     usuario = models.OneToOneField(MyUser, on_delete=models.CASCADE, related_name='artista', null=True, blank=True) 
-    nombre_artistico = models.CharField(max_length=100, verbose_name='Nombre_Artistico')
-    foto_perfil = models.ImageField(verbose_name='Foto_perfil', null=True)
-    biografia = models.TextField(max_length=500, verbose_name='Biografia')
+    nombre_artistico = models.CharField(max_length=100, verbose_name='Nombre_Artistico', blank=True)
+    foto_perfil = models.ImageField(verbose_name='Foto_perfil', null=True, blank=True)
+    biografia = models.TextField(max_length=500, verbose_name='Biografia', blank=True)
     sitio_web = models.URLField(blank=True)
 
     def __str__(self):

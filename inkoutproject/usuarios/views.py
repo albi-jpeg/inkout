@@ -23,11 +23,19 @@ def usuario_mostrar(request):
     # EDITAR USUARIO
     if accion == 'editar':
         usuario = get_object_or_404(MyUser, pk=pk)
+        type = usuario.user_type #guardamos el tipo de usuario
+
         if request.method == 'POST':
             form = UsuarioForm(request.POST, request.FILES, instance=usuario)
             if form.is_valid():
-                form.save()
-                return redirect('usuario_mostrar')
+                usuario = form.save()
+
+                # Si el tipo cambia a artista y no existe aún como artista se crea instancia
+                if usuario.user_type == 'artista' and not Artista.objects.filter(usuario=usuario).exists():
+                    Artista.objects.create(usuario=usuario)
+                    messages.info(request, 'Completa los datos del nuevo artista antes de continuar.')
+
+                return redirect('artista_mostrar')
         else:
             form = UsuarioForm(instance=usuario)
 
@@ -37,7 +45,6 @@ def usuario_mostrar(request):
             'mostrar': 'usuarios',
             'usuario': usuario,
         })
-
 
     # BORRAR USUARIO
     if accion == 'borrar':
@@ -59,6 +66,7 @@ def usuario_mostrar(request):
         'mostrar': 'usuarios'
     })
 
+
 def usuario_crear(request):
     if request.method == 'POST':
         form = UsuarioForm(request.POST, request.FILES)
@@ -66,7 +74,13 @@ def usuario_crear(request):
             usuario = form.save(commit=False)
             usuario.set_password(form.cleaned_data['password'])
             usuario.save()
-            return redirect('usuario_mostrar')
+
+            # Crear instancia Artista si el user_type es 'artista'
+            if usuario.user_type == 'artista' and not Artista.objects.filter(usuario=usuario).exists():
+                Artista.objects.create(usuario=usuario)
+                messages.info(request, 'Completa los datos del nuevo artista antes de continuar.')
+
+            return redirect('artista_mostrar')
     else:
         form = UsuarioForm()
 
